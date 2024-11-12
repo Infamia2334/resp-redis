@@ -4,7 +4,7 @@ export default class RespParser {
 
     // }
 
-    serialize(data: string | any[] | null) {
+    serialize(data: string | string[] | number | null) {
         if (data === null) {
             return `$-1\r\n`;
         }
@@ -12,11 +12,19 @@ export default class RespParser {
             return `:${data}\r\n`;
         }
         if (typeof data === 'string') {
-            return `$${data.length}\r\n$`
+            return `$${data.length}\r\n${data}\r\n`;
+        }
+        if (Array.isArray(data)) {
+            let serializedArr = `${data.length}\r\n`;
+            for (const element of data) {
+                serializedArr += this.serialize(element);
+            }
+
+            return serializedArr;
         }
     }
 
-    deserialize(buffer: Buffer): string | number | null | RESPValue[] {
+    deserialize(buffer: Buffer): RESPValue {
         const stringifiedBuffer = buffer.toString();
 
         console.log(stringifiedBuffer);

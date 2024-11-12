@@ -3,7 +3,7 @@
 
 import RespParser from '../src/respParser';
 
-describe('RESP Serialization tests', () => {
+describe('RESP Parser tests', () => {
     const parser = new RespParser();
 
     it('should deserialize a simple string', () => {
@@ -34,5 +34,13 @@ describe('RESP Serialization tests', () => {
         const buffer = Buffer.from("*2\r\n$4\r\necho\r\n$11\r\nhello world\r\n");
         const result = parser.deserialize(buffer);
         expect(result).toEqual(['echo', 'hello world']);
+    });
+
+    it('should serialize a simple string', () => {
+        expect(parser.serialize('foobar')).toEqual("$6\r\nfoobar\r\n");
+        // expect('foobar').toEqual("$6\r\nfoobar\r\n");
+        // expect(null).toEqual("$-1\r\n");
+        // expect(1000).toEqual(":1000\r\n");
+        // expect(['echo', 'hello world']).toEqual("*2\r\n$4\r\necho\r\n$11\r\nhello world\r\n");
     });
 });
